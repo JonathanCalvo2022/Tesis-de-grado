@@ -1,0 +1,62 @@
+#===============================================================================
+#Nombre: Jonathan Calvopiña Merchan
+#Fecha: 17/05/2024
+#Objetivo: Ejemplo aplicativo de los métodos clúster jerárquicos de LA.
+#Version en R: 4.2.2 (2022-10-31 ucrt)
+#===============================================================================
+# Vector de los paquetes necesarios
+packages <- c("cluster", "purrr", "car")
+
+# Función para verificar e instalar paquetes
+install_if_missing <- function(packages) {
+  new_packages <- packages[!(packages %in% installed.packages()[,"Package"])]
+  if(length(new_packages)) install.packages(new_packages)
+  lapply(packages, library, character.only = TRUE)
+}
+
+# Ejecutar la función
+install_if_missing(packages)
+#===============================================================================
+# Bibliotecas para los métodos de LA (diana y aglomerativo)
+library("cluster")
+library("purrr")
+library("car")
+#===============================================================================
+
+# Exportar la base de datos, cambiar el directorio
+df <- read_excel("base/datos_mod/data_musica.xlsx")
+
+# Eliminamos la primera fila de individuos para LA
+n <- t(df[-1])
+
+# Transponer las filas por las columnas en caso de LA
+df_transpose <- data.frame(n)
+
+# Añadimos los nombres de las columnas al trasponer
+colnames(df_transpose) <- df[, 1]
+
+# Renombrar la nueva data 
+x <- df_transpose
+
+#===============================================================================
+# Aplicamos el método diana
+met_diana <- diana(x, metric = "euclidean")
+
+pltree(met_diana, cex = 2.0, hang = -9,
+       main = "Dendograma de diana (x = distancia euclideana)",
+       cex.main = 1.5, ylab = "Height", cex.lab = 1.2)
+
+#===============================================================================
+# Nota:
+#La dist. Euclideana ya viene instalada por defecto en el método diana (LA)
+#===============================================================================
+# Aplicamos el método aglomerarivo
+distancia_euclideana <- dist(x, method = "euclidean") 
+met_aglomerativo <- hclust(distancia_euclideana, method = "ward.D" ) 
+plot(met_aglomerativo, cex = 2, hang = -9, main = "Dendograma de Aglomerativo",
+     cex.main = 1.5, ylab = "Height", cex.lab = 1.2) 
+
+#===============================================================================
+# Nota:
+#La dist. Euclideana viene instalada por defecto en el método aglomerativo (LA)
+#===============================================================================
