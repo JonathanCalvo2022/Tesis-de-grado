@@ -1,2 +1,2 @@
 # Tesis-de-grado
-Repertorio del trabajo de Tesis Jonathan Calvopiña Merchan
+Repertorio de los algoritmos de LA y ASI
